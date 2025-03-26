@@ -46,7 +46,8 @@ extension AccountsViewController: UICollectionViewDelegate, UICollectionViewData
             for: indexPath
         ) as? AccountCell else { return  UICollectionViewCell() }
         let account = viewModel.accounts[indexPath.item]
-        let balance = viewModel.amount
+        let amount = viewModel.balance(for: account.accountUid)
+        cell.configure(with: account, amount: amount)
         return cell
     }
     

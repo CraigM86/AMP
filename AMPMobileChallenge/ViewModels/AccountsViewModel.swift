@@ -11,7 +11,7 @@ class AccountsViewModel {
     private let service: StarlingService
     
     var accounts: [Account] = []
-    var amount: Amount?
+    var accountBalances: [String: Amount] = [:]
     
     init(starlingService: StarlingService = StarlingService()) {
         self.service = starlingService
@@ -28,10 +28,14 @@ class AccountsViewModel {
     
     func getAccountBalanceByID(_ accountID: String) async {
         do {
-            let balance = try await service.fetchAccountBalance(for: accountID)
-            amount = balance.amount
+            let accountBalanceData = try await service.fetchAccountBalance(for: accountID)
+            accountBalances[accountID] = accountBalanceData.amount
         } catch {
             print("Failed to fetch account Balance: \(error.localizedDescription)")
         }
+    }
+
+    func balance(for accountID: String) -> Amount? {
+        return accountBalances[accountID]
     }
 }
