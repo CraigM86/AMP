@@ -61,9 +61,12 @@ class StarlingService {
     
     func fetchTransactions(for accountId: String, categoryId: String, since dateISO: String?) async throws -> TransactionData {
         let path = "/api/v2/feed/account/\(accountId)/category/\(categoryId)"
-        let queryItems: [URLQueryItem] = [
-            URLQueryItem(name: "changesSince", value: "2020-01-01T12:34:56.000Z")
-        ]
+        var queryItems: [URLQueryItem]?
+        if let date = dateISO {
+            queryItems = [
+                URLQueryItem(name: "changesSince", value: date)
+            ]
+        }
         let url = try createURL(path: path, urlQueryItems: queryItems)
         let urlRequest = try createURLRequest(url: url, method: .get)
         let (data, response) = try await session.data(for: urlRequest)
@@ -74,7 +77,11 @@ class StarlingService {
         let transactionData = try JSONDecoder().decode(TransactionData.self, from: data)
         return transactionData
     }
-    
+}
+
+// MARK: Helpers
+
+extension StarlingService {
     
     private func createURL(path: String, urlQueryItems: [URLQueryItem]? = nil) throws -> URL {
         guard var urlComponents = URLComponents(url: baseUrl.appendingPathComponent(path), resolvingAgainstBaseURL: true) else {

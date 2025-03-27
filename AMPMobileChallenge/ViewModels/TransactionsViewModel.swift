@@ -34,10 +34,12 @@ class TransactionsViewModel {
     
     func getTransactionFeed() async {
         do {
-            try await service.fetchTransactions(
+            let transactionsData = try await service.fetchTransactions(
                 for: accountUid,
                 categoryId: categoryUid,
-                since: isoDateString)
+                since: isoDateString
+            )
+            feedItems = transactionsData.feedItems
         } catch {
             print(error.localizedDescription)
         }
