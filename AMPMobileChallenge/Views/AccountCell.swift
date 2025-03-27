@@ -34,6 +34,12 @@ class AccountCell: UICollectionViewCell {
         fatalError( "init(coder:) has not been implemented" )
     }
     
+    override func prepareForReuse() {
+        super.prepareForReuse()
+        nameLabel.text = nil
+        balanceLabel.text = nil
+    }
+    
     func configure(with account: Account, amount: Amount?) {
         if let amount = amount {
             balanceLabel.text = "\(amount.currency) \(amount.minorUnits)"

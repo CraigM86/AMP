@@ -63,4 +63,10 @@ extension AccountsViewController: UICollectionViewDelegate, UICollectionViewData
         collectionView.dataSource = self
     }
     
+    func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
+        let acount = viewModel.accounts[indexPath.item]
+        let transactionsViewModel = TransactionsViewModel(accountUid: acount.accountUid, categoryUid: acount.defaultCategory)
+        let vc = TransactionsViewController(viewModel: transactionsViewModel)
+        navigationController?.pushViewController(vc, animated: true)
+    }
 }
