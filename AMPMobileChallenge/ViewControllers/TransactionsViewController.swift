@@ -24,6 +24,7 @@ class TransactionsViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         setupCollectionView()
+        addButton()
         setDate()
         getTransactions()
     }
@@ -50,9 +51,8 @@ extension TransactionsViewController: UICollectionViewDelegate, UICollectionView
             withReuseIdentifier: TransactionsCell.reuseIdentifier,
             for: indexPath
         ) as? TransactionsCell else { return  UICollectionViewCell() }
-//        let account = viewModel.feedItems[indexPath.item]
-//        let amount = viewModel.balance(for: account.accountUid)
-        cell.configure()
+        let feedItem = viewModel.feedItems[indexPath.item]
+        cell.configure(item: feedItem)
         return cell
     }
     
@@ -63,8 +63,41 @@ extension TransactionsViewController: UICollectionViewDelegate, UICollectionView
         
         collectionView = UICollectionView(frame: view.bounds, collectionViewLayout: layout)
         view.addSubview(collectionView)
-        collectionView.register(TransactionsCell.self, forCellWithReuseIdentifier: TransactionsCell.reuseIdentifier)
+        collectionView.register(
+            TransactionsCell.self,
+            forCellWithReuseIdentifier: TransactionsCell.reuseIdentifier
+        )
         collectionView.delegate = self
         collectionView.dataSource = self
+    }
+    
+    private func addButton() {
+        let roundUpButton = UIButton(type: .system)
+        var config = UIButton.Configuration.filled()
+        config.title = "Round Up"
+        config.image = UIImage(systemName: "arrow.up", withConfiguration: UIImage.SymbolConfiguration(scale: .medium))
+        config.imagePlacement = .trailing
+        config.imagePadding = 8
+        
+        roundUpButton.configuration = config
+        view.addSubview(roundUpButton)
+        roundUpButton.translatesAutoresizingMaskIntoConstraints = false
+        
+        NSLayoutConstraint.activate([
+            roundUpButton.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor, constant: -30),
+            roundUpButton.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -30)
+        ])
+        roundUpButton.addTarget(self, action: #selector(roundUpTapped), for: .touchUpInside)
+    }
+    
+    @objc func roundUpTapped() {
+        print("round uptapped")
+        let roundUpVC = RoundUpViewController()
+        roundUpVC.modalPresentationStyle = .pageSheet
+        if let sheet = roundUpVC.sheetPresentationController {
+            sheet.detents = [.medium(), .large()]
+            sheet.prefersGrabberVisible = true
+        }
+        present(roundUpVC, animated: true)
     }
 }

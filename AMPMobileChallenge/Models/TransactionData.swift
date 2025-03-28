@@ -21,5 +21,6 @@ struct FeedItem: Decodable {
     let categoryUid: String
     let amount: Amount
     let direction: Direction
+    let transactionTime: String
     let counterPartyName: String
 }
