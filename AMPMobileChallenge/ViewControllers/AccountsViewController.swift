@@ -16,6 +16,10 @@ class AccountsViewController: UIViewController {
         super.viewDidLoad()
         view.backgroundColor = .systemBackground
         setupCollectionView()
+    }
+    
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
         fetchData()
     }
     
@@ -30,6 +34,7 @@ class AccountsViewController: UIViewController {
     private func fetchBalance() async {
         for account in viewModel.accounts {
             
+            // TODO: Put this in a Group so they're requested concurrently
             await viewModel.getAccountBalanceByID(account.accountUid)
         }
     }
@@ -53,8 +58,8 @@ extension AccountsViewController: UICollectionViewDelegate, UICollectionViewData
     
     private func setupCollectionView() {
         let layout = UICollectionViewFlowLayout()
-        layout.itemSize = CGSize(width: view.frame.width - 30, height: 150)
-        layout.sectionInset = UIEdgeInsets(top: 20, left: 15, bottom: 20, right: 15)
+        layout.itemSize = CGSize(width: view.frame.width - 30, height: 160)
+        layout.sectionInset = UIEdgeInsets(top: 40, left: 15, bottom: 20, right: 15)
         
         collectionView = UICollectionView(frame: view.bounds, collectionViewLayout: layout)
         view.addSubview(collectionView)

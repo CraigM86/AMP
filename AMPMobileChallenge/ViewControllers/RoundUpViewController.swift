@@ -27,7 +27,7 @@ class RoundUpViewController: UIViewController {
     private var titleLabel = {
         let label = UILabel()
         label.textAlignment = .center
-        label.font = .systemFont(ofSize: 24, weight: .bold)
+        label.font = .systemFont(ofSize: 19, weight: .bold)
         return label
     }()
     
@@ -48,7 +48,7 @@ class RoundUpViewController: UIViewController {
     private var submitButton = {
         let button = UIButton(type: .system)
         button.configuration = UIButton.Configuration.filled()
-        button.setTitle("Submit", for: .normal)
+        button.setTitle("ADD TO SAVINGS GOAL", for: .normal)
         button.isEnabled = false
         button.addTarget(self, action: #selector(handleSubmit), for: .touchUpInside)
         return button
