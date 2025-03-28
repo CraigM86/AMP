@@ -22,6 +22,11 @@ class SavingsGoalViewController: UIViewController {
         fetchData()
     }
     
+    override func viewWillDisappear(_ animated: Bool) {
+        super.viewWillDisappear(animated)
+        viewModel.savingsGoals.removeAll()
+    }
+    
     private func fetchData() {
         Task {
             await viewModel.getAccounts()
@@ -46,12 +51,11 @@ extension SavingsGoalViewController: UICollectionViewDataSource, UICollectionVie
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         guard let cell = collectionView.dequeueReusableCell(
-            withReuseIdentifier: AccountCell.reuseIdentifier,
+            withReuseIdentifier: SavingGoalsCell.reuseIdentifier,
             for: indexPath
-        ) as? AccountCell else { return  UICollectionViewCell() }
-//        let account = viewModel.accounts[indexPath.item]
-//        let amount = viewModel.balance(for: account.accountUid)
-//        cell.configure(with: account, amount: amount)
+        ) as? SavingGoalsCell else { return  UICollectionViewCell() }
+        let savingsGoal = viewModel.savingsGoals[indexPath.row]
+        cell.configure(with: savingsGoal)
         return cell
     }
     
@@ -62,7 +66,7 @@ extension SavingsGoalViewController: UICollectionViewDataSource, UICollectionVie
         
         collectionView = UICollectionView(frame: view.bounds, collectionViewLayout: layout)
         view.addSubview(collectionView)
-        collectionView.register(AccountCell.self, forCellWithReuseIdentifier: AccountCell.reuseIdentifier)
+        collectionView.register(SavingGoalsCell.self, forCellWithReuseIdentifier: SavingGoalsCell.reuseIdentifier)
         collectionView.delegate = self
         collectionView.dataSource = self
     }
