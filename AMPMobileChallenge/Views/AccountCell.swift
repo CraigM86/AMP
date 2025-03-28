@@ -65,7 +65,6 @@ class AccountCell: UICollectionViewCell {
         balanceLabel.translatesAutoresizingMaskIntoConstraints = false
         
         NSLayoutConstraint.activate([
-            balanceLabel.topAnchor.constraint(equalTo: contentView.topAnchor, constant: 20),
             balanceLabel.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -32),
             balanceLabel.bottomAnchor.constraint(equalTo: contentView.bottomAnchor, constant: -20),
         ])
@@ -74,14 +73,14 @@ class AccountCell: UICollectionViewCell {
         let stackView = UIStackView(arrangedSubviews: [accountTypeLabel, nameLabel])
         stackView.axis = .vertical
         stackView.alignment = .leading
-        stackView.spacing = 8
+        stackView.spacing = 4
         stackView.translatesAutoresizingMaskIntoConstraints = false
         
         contentView.addSubview(stackView)
         NSLayoutConstraint.activate([
             stackView.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 32),
             stackView.trailingAnchor.constraint(equalTo: balanceLabel.leadingAnchor, constant: -8),
-            stackView.topAnchor.constraint(equalTo: contentView.topAnchor, constant: 40),
+            stackView.topAnchor.constraint(equalTo: contentView.topAnchor, constant: 28),
         ])
         
         contentView.backgroundColor = .systemBlue
