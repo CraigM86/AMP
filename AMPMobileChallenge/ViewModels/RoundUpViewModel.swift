@@ -27,7 +27,9 @@ class RoundUpViewModel {
     func fetchSavingGoalsForID(_ accountID: String) async {
         do {
             let goals = try await service.fetchSavingsGoal(for: accountID)
-            savingsGoals = goals.savingsGoalList
+            await MainActor.run {
+                savingsGoals = goals.savingsGoalList
+            }
         } catch {
             print("Failed to fetch Savings Goals: \(error.localizedDescription)")
         }
@@ -41,6 +43,7 @@ class RoundUpViewModel {
                 transferUid: UUID().uuidString,
                 minorUnits: CurrencyFormatter.convertDollarToCents(dollar: roundUpAmount ?? 0.0)
             )
+            // TODO: Handle success of add roundup 'PUT' request to show in a UIAlert
         } catch {
             print(error.localizedDescription)
         }

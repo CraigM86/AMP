@@ -20,7 +20,9 @@ class AccountsViewModel {
     func getAccounts() async {
         do {
             let accountData = try await service.fetchAccounts()
-            accounts = accountData.accounts
+            await MainActor.run {
+                accounts = accountData.accounts
+            }
         } catch {
             print("Failed to fetch accounts: \(error.localizedDescription)")
         }

@@ -40,8 +40,10 @@ class TransactionsViewModel {
                 categoryId: categoryUid,
                 since: isoDateString
             )
-            feedItems = transactionsData.feedItems
-            roundUpAmount = roundUpTransactionAmount(feedItems.compactMap { $0.amount })
+            await MainActor.run {            
+                feedItems = transactionsData.feedItems
+                roundUpAmount = roundUpTransactionAmount(feedItems.compactMap { $0.amount })
+            }
         } catch {
             print(error.localizedDescription)
         }

@@ -124,6 +124,7 @@ class RoundUpViewController: UIViewController {
         guard let selectedSavingsGoal else { return }
         Task {
             await viewModel.addMoneyToSavingsGoal(savingsGoalID: selectedSavingsGoal)
+            self.dismiss(animated: true)
         }
     }
 }
