@@ -33,7 +33,7 @@ class StarlingService {
     
     func fetchAccounts() async throws -> AccountData {
         let path = "/api/v2/accounts"
-        let url = try createURL(path: path, urlQueryItems: nil)
+        let url = try createURL(path: path)
         let urlRequest = try createURLRequest(url: url, method: .get)
         let (data, response) = try await session.data(for: urlRequest)
         
@@ -46,7 +46,7 @@ class StarlingService {
     
     func fetchAccountBalance(for accountId: String) async throws -> AccountBalanceData {
         let path = "/api/v2/accounts/\(accountId)/balance"
-        let url = try createURL(path: path, urlQueryItems: nil)
+        let url = try createURL(path: path)
         let urlRequest = try createURLRequest(url: url, method: .get)
         let (data, response) = try await session.data(for: urlRequest)
         
@@ -76,6 +76,47 @@ class StarlingService {
         }
         let transactionData = try JSONDecoder().decode(TransactionData.self, from: data)
         return transactionData
+    }
+    
+    // Savings Goal
+    func fetchSavingsGoal(for accountId: String) async throws -> SavingsGoalsData {
+        let path = "/api/v2/account/\(accountId)/savings-goals"
+        let url = try createURL(path: path)
+        let urlRequest = try createURLRequest(url: url, method: .get)
+        let (data, response) = try await session.data(for: urlRequest)
+        
+        guard (response as? HTTPURLResponse)?.statusCode == 200 else {
+            throw StarlingError.serverError
+        }
+        let savingsGoalsData = try JSONDecoder().decode(SavingsGoalsData.self, from: data)
+        return savingsGoalsData
+    }
+    
+    func addRoundupToSavingsGoal(
+        accountID: String,
+        savingsGoalUid: String,
+        transferUid: String,
+        minorUnits: Int
+    ) async throws -> SavingsGoalSuccessData {
+        let path = "/api/v2/account/\(accountID)/savings-goals/\(savingsGoalUid)/add-money/\(transferUid)"
+        let url = try createURL(path: path)
+        let body: [String: Any] = [
+            "amount": [
+                "currency": "GBP",
+                "minorUnits": minorUnits
+            ]
+        ]
+        let jsonData = try JSONSerialization.data(withJSONObject: body, options: [])
+        
+        var urlRequest = try createURLRequest(url: url, method: .put)
+        urlRequest.httpBody = jsonData
+        
+        let (data, response) = try await session.data(for: urlRequest)
+        guard (response as? HTTPURLResponse)?.statusCode == 200 else {
+            throw StarlingError.serverError
+        }
+        let savingsGoalSuccessData = try JSONDecoder().decode(SavingsGoalSuccessData.self, from: data)
+        return savingsGoalSuccessData
     }
 }
 

@@ -16,21 +16,17 @@ class TabBarController: UITabBarController {
     
     private func setupTabs() {
         let accountsVC = AccountsViewController()
-        let roundUpVC = RoundUpViewController()
         let savingsGoalVC = SavingsGoalViewController()
         
         accountsVC.tabBarItem = UITabBarItem(title: "Accounts", image: UIImage(systemName: "creditcard"), tag: 0)
-        roundUpVC.tabBarItem = UITabBarItem(title: "Round Up", image: UIImage(systemName: "arrow.up"), tag: 1)
-        savingsGoalVC.tabBarItem = UITabBarItem(title: "Savings Goal", image: UIImage(systemName: "wallet.bifold"), tag: 2)
+        savingsGoalVC.tabBarItem = UITabBarItem(title: "Savings Goals", image: UIImage(systemName: "wallet.bifold"), tag: 2)
         
         accountsVC.title = "Accounts"
-        roundUpVC.title = "Round Up"
         savingsGoalVC.title = "Savings Goal"
         
         let accountsNav = UINavigationController(rootViewController: accountsVC)
-        let roundUpNav = UINavigationController(rootViewController: roundUpVC)
         let savingsGoalNav = UINavigationController(rootViewController: savingsGoalVC)
         
-        setViewControllers([accountsNav, roundUpNav, savingsGoalNav], animated: false)
+        setViewControllers([accountsNav, savingsGoalNav], animated: false)
     }
 }

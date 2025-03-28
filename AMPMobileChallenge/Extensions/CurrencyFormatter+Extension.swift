@@ -15,12 +15,17 @@ struct CurrencyFormatter {
         let direction = trasactionDirection == .inbound ? "" : "-"
         let currencySymbol = amount.currency == "GBP" ? "£" : "$"
         let amountValue = convertCentsToDollar(cents: amount.minorUnits)
-        let amountString = "\(direction)\(currencySymbol)\(amountValue)"
-        return amountString
+        let amountString = String(format: "%.2f", amountValue)
+        return "\(direction)\(currencySymbol)\(amountString)"
     }
     
-    private static func convertCentsToDollar(cents: Int) -> Double {
+    static func convertCentsToDollar(cents: Int) -> Double {
         let dollarValue = Double(cents) / 100
         return round(dollarValue * 100) / 100
+    }
+    
+    static func convertDollarToCents(dollar: Double) -> Int {
+        let centsValue = Int(dollar * 100)
+        return centsValue
     }
 }

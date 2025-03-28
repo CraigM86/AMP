@@ -91,8 +91,13 @@ extension TransactionsViewController: UICollectionViewDelegate, UICollectionView
     }
     
     @objc func roundUpTapped() {
-        print("round uptapped")
-        let roundUpVC = RoundUpViewController()
+        let roundUpViewModel = RoundUpViewModel(
+            accountUid: viewModel.accountUid,
+            roundUpAmount: viewModel.roundUpAmount ?? 0.00
+        )
+        
+        let roundUpVC = RoundUpViewController(viewModel: roundUpViewModel)
+        
         roundUpVC.modalPresentationStyle = .pageSheet
         if let sheet = roundUpVC.sheetPresentationController {
             sheet.detents = [.medium(), .large()]
