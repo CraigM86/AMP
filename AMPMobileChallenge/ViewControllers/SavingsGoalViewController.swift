@@ -11,10 +11,17 @@ class SavingsGoalViewController: UIViewController {
     
     private var collectionView: UICollectionView!
     private let viewModel = SavingsGoalViewModel()
+    
+    private let activityIndicator: UIActivityIndicatorView = {
+        let activityIndicator = UIActivityIndicatorView(style: .medium)
+        activityIndicator.hidesWhenStopped = true
+        return activityIndicator
+    }()
 
     override func viewDidLoad() {
         super.viewDidLoad()
         setupCollectionView()
+        setupActivityIndication()
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -29,9 +36,13 @@ class SavingsGoalViewController: UIViewController {
     
     private func fetchData() {
         Task {
+            activityIndicator.startAnimating()
+            
             await viewModel.getAccounts()
             await fetchSavingsGoals()
             collectionView.reloadData()
+            
+            activityIndicator.stopAnimating()
         }
     }
     
@@ -41,6 +52,16 @@ class SavingsGoalViewController: UIViewController {
             // TODO: Handle this concurrently
             await viewModel.fetchSavingGoalsForID(account.accountUid)
         }
+    }
+    
+    private func setupActivityIndication() {
+        view.addSubview(activityIndicator)
+        
+        activityIndicator.translatesAutoresizingMaskIntoConstraints = false
+        NSLayoutConstraint.activate([
+            activityIndicator.centerXAnchor.constraint(equalTo: view.centerXAnchor),
+            activityIndicator.centerYAnchor.constraint(equalTo: view.centerYAnchor),
+        ])
     }
 }
 

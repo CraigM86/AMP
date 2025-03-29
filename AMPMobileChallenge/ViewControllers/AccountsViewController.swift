@@ -12,10 +12,17 @@ class AccountsViewController: UIViewController {
     private let viewModel = AccountsViewModel()
     private var collectionView: UICollectionView!
 
+    private let activityIndicator: UIActivityIndicatorView = {
+        let activityIndicator = UIActivityIndicatorView(style: .medium)
+        activityIndicator.hidesWhenStopped = true
+        return activityIndicator
+    }()
+
     override func viewDidLoad() {
         super.viewDidLoad()
         view.backgroundColor = .systemBackground
         setupCollectionView()
+        setupActivityIndication()
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -25,9 +32,12 @@ class AccountsViewController: UIViewController {
     
     private func fetchData() {
         Task {
+            activityIndicator.startAnimating()
             await viewModel.getAccounts()
             await fetchBalance()
             collectionView.reloadData()
+            
+            activityIndicator.stopAnimating()
         }
     }
     
@@ -37,6 +47,16 @@ class AccountsViewController: UIViewController {
             // TODO: Put this in a Group so they're requested concurrently
             await viewModel.getAccountBalanceByID(account.accountUid)
         }
+    }
+    
+    private func setupActivityIndication() {
+        view.addSubview(activityIndicator)
+        
+        activityIndicator.translatesAutoresizingMaskIntoConstraints = false
+        NSLayoutConstraint.activate([
+            activityIndicator.centerXAnchor.constraint(equalTo: view.centerXAnchor),
+            activityIndicator.centerYAnchor.constraint(equalTo: view.centerYAnchor),
+        ])
     }
 }
 

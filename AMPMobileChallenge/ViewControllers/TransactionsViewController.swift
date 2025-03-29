@@ -12,6 +12,12 @@ class TransactionsViewController: UIViewController {
     private let viewModel: TransactionsViewModel
     private var collectionView: UICollectionView!
     
+    private let activityIndicator: UIActivityIndicatorView = {
+        let activityIndicator = UIActivityIndicatorView(style: .medium)
+        activityIndicator.hidesWhenStopped = true
+        return activityIndicator
+    }()
+    
     init(viewModel: TransactionsViewModel) {
         self.viewModel = viewModel
         super.init(nibName: nil, bundle: nil)
@@ -24,6 +30,7 @@ class TransactionsViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         setupCollectionView()
+        setupActivityIndication()
         addButton()
         setDate()
         getTransactions()
@@ -35,9 +42,21 @@ class TransactionsViewController: UIViewController {
     
     private func getTransactions() {
         Task {
+            activityIndicator.startAnimating()
             await viewModel.getTransactionFeed()
             collectionView.reloadData()
+            activityIndicator.stopAnimating()
         }
+    }
+    
+    private func setupActivityIndication() {
+        view.addSubview(activityIndicator)
+        
+        activityIndicator.translatesAutoresizingMaskIntoConstraints = false
+        NSLayoutConstraint.activate([
+            activityIndicator.centerXAnchor.constraint(equalTo: view.centerXAnchor),
+            activityIndicator.centerYAnchor.constraint(equalTo: view.centerYAnchor),
+        ])
     }
 }
 

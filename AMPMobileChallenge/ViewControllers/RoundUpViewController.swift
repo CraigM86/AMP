@@ -24,6 +24,12 @@ class RoundUpViewController: UIViewController {
         fatalError("init(coder:) has not been implemented")
     }
     
+    private let activityIndicator: UIActivityIndicatorView = {
+        let activityIndicator = UIActivityIndicatorView(style: .medium)
+        activityIndicator.hidesWhenStopped = true
+        return activityIndicator
+    }()
+    
     private var titleLabel = {
         let label = UILabel()
         label.textAlignment = .center
@@ -58,6 +64,7 @@ class RoundUpViewController: UIViewController {
         super.viewDidLoad()
         view.backgroundColor = .systemBackground
         setupSubviews()
+        setupActivityIndication()
         fetchSavingsGoals()
         picker.delegate = self
         picker.dataSource = self
@@ -68,8 +75,12 @@ class RoundUpViewController: UIViewController {
     
     private func fetchSavingsGoals() {
         Task {
+            activityIndicator.startAnimating()
+            
             await viewModel.fetchSavingGoalsForID(viewModel.accountUid)
             picker.reloadAllComponents()
+            
+            activityIndicator.stopAnimating()
         }
     }
     
@@ -117,6 +128,16 @@ class RoundUpViewController: UIViewController {
             submitButton.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 40),
             submitButton.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -40),
             submitButton.heightAnchor.constraint(equalToConstant: 50)
+        ])
+    }
+    
+    private func setupActivityIndication() {
+        view.addSubview(activityIndicator)
+        
+        activityIndicator.translatesAutoresizingMaskIntoConstraints = false
+        NSLayoutConstraint.activate([
+            activityIndicator.centerXAnchor.constraint(equalTo: view.centerXAnchor),
+            activityIndicator.centerYAnchor.constraint(equalTo: view.centerYAnchor),
         ])
     }
     
